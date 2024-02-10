@@ -2,6 +2,7 @@ import pandas as pd
 import pyodbc
 
 from app.configs import SERVER, DATABASE, USERNAME, PASSWORD
+from .sql_queries import *
 
 
 class SQL:
@@ -33,17 +34,34 @@ class SQL:
             if sort:
                 query += f' ORDER BY {", ".join(sort)}'
 
-        conn = pyodbc.connect(self.conn_str)
+        df = self.__send_query(query)
 
+        return df
+
+    def get_diff_shares_primary(self):
+        query = primary_stocks_shareholders_change
+
+        df = self.__send_query(query)
+
+        return df
+
+    def get_diff_shares_primary_with_feature(self):
+        query = primary_stocks_shareholders_change_with_features
+
+        df = self.__send_query(query)
+
+        return df
+
+    def __send_query(self, query):
+        conn = pyodbc.connect(self.conn_str)
         try:
-            df = pd.read_sql_query(query, conn)
+            df = pd.read_sql_query(query, conn).reset_index(drop=True)
         except Exception as e:
             print(f"Error executing SQL query: {str(e)}")
             df = pd.DataFrame()
         finally:
             conn.close()
-
         return df
-# Example usage:
 
-
+if __name__ == "__main__":
+    SQL().get_diff_shares_primary()

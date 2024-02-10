@@ -11,3 +11,4 @@ app/__pycache__/configs.cpython-311.pyc
 app/ext_data/price.csv
 app/get_data/__pycache__/__init__.cpython-311.pyc
 app/get_data/__pycache__/SqlDB.cpython-311.pyc
+*.pyc
